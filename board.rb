@@ -29,8 +29,14 @@ class Board
     get_tile(pos).reveal
   end
 
+  def toggle_flag(pos)
+    get_tile(pos).toggle_flag
+  end
+
   def display
-    self.board.each do |row|
+    puts "    1  2  3  4  5  6  7  8  9 "
+    self.board.each.with_index do |row, i|
+      print " #{i + 1}|"
       row.each do |el|
         print el.symbol
       end
@@ -44,6 +50,10 @@ class Board
 
   def explode?
     self.board.flatten.any? { |tile| tile.explode? }
+  end
+
+  def winner?
+    self.board.flatten.all? {|tile| tile.flagged_bomb? || tile.revealed_empty?}
   end
 end
 

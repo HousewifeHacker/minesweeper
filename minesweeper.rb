@@ -31,7 +31,7 @@ class MineSweeper
       when 1
         @board.reveal(get_coordinate)
       when 2
-        @board.flag(get_coordinate)
+        @board.toggle_flag(get_coordinate)
       when 3
         puts "no"
       when 4
@@ -39,7 +39,7 @@ class MineSweeper
       end
     end
     @board.display
-    puts "You died."
+    game_over_message
   end
 
   def get_coordinate
@@ -48,7 +48,17 @@ class MineSweeper
     until input =~ /\A([1-9]) +([1-9])\z/
       input = gets.chomp
     end
-    [($1.to_i)-1,($2.to_i)-1]
+    [($2.to_i)-1,($1.to_i)-1]
+  end
+
+  def game_over_message
+    if @board.winner?
+      puts "A winner is you."
+    elsif @board.explode?
+      puts "You are dead."
+    else
+      puts "How did you get here?"
+    end
   end
 
   def display_turn_menu
@@ -61,7 +71,7 @@ class MineSweeper
   end
 
   def over?
-    @board.explode?
+    @board.explode? || @board.winner?
   end
 
   def create_new_board
