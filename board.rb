@@ -25,6 +25,10 @@ class Board
     bomb_positions
   end
 
+  def reveal(pos)
+    get_tile(pos).reveal
+  end
+
   def display
     self.board.each do |row|
       row.each do |el|
@@ -36,6 +40,10 @@ class Board
 
   def get_tile(pos)
     self.board[pos.first][pos.last]
+  end
+
+  def explode?
+    self.board.flatten.any? { |tile| tile.explode? }
   end
 end
 

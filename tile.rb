@@ -15,6 +15,10 @@ class Tile
     @bomb
   end
 
+  def toggle_flag
+    @flagged = !@flagged
+  end
+
   def symbol
     return " F " if @flagged
     return " * " if !@revealed && !@flagged
@@ -40,6 +44,20 @@ class Tile
   end
 
   def reveal
+    @revealed = true unless @flagged
+    if neighbor_bomb_count == 0
+      neighbors.each do |neighbor|
+        neighbor.reveal unless neighbor.revealed?
+      end
+    end
+  end
+
+  def revealed?
+    @revealed
+  end
+
+  def explode?
+    @revealed && @bomb
   end
 
   def neighbor_bomb_count
