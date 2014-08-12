@@ -1,3 +1,5 @@
+require 'yaml'
+
 require './board.rb'
 require './tile.rb'
 
@@ -11,7 +13,7 @@ class MineSweeper
         create_new_board
         turn_loop
       when 2
-        puts "No."
+        load
       when 3
         @continue_game = false
       end
@@ -33,7 +35,7 @@ class MineSweeper
       when 2
         @board.toggle_flag(get_coordinate)
       when 3
-        puts "no"
+        save
       when 4
         return
       end
@@ -59,6 +61,29 @@ class MineSweeper
     else
       puts "How did you get here?"
     end
+  end
+
+  def save
+    puts "Save to which slot? (1-10)"
+    slot = get_user_choice(10)
+    savefile = File.open("minesweeper#{slot}.sav", "w")
+    savefile.write(@board.to_yaml)
+    savefile.close
+  end
+
+  def load
+    puts "Load from which slot? (1-10)"
+    slot = get_user_choice(10)
+
+    unless File.exist?("minesweeper#{slot}.sav")
+      puts "Save file doesn't exist."
+      return
+    end
+
+    savefile = File.open("minesweeper#{slot}.sav")
+    @board = YAML::load(savefile.read)
+    savefile.close
+    turn_loop
   end
 
   def display_turn_menu
